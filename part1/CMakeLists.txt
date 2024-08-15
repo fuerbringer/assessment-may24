@@ -2,7 +2,7 @@
 include_directories(include)
 
 # lib
-add_library(libpart1 source/library.cpp)
+add_library(libpart1 source/hashtable.cpp)
 add_executable(part1 source/main.cpp)
 
 # app

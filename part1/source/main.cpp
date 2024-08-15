@@ -1,5 +1,5 @@
-#include "library.hpp"
+#include "hashtable.hpp"
 
-auto main() -> int {
-  return library();
+int main() {
+  return 0;
 }
