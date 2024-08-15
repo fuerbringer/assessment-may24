@@ -5,14 +5,89 @@
 (Comment)
 Mostly worked test driven. Bodies try to conform to AAA pattern.
 */
+using KeyValue = std::pair<KeyType, ValueType>;
 
-TEST(HashTableTest, DefaultHashFunctionReturnsZero) {
-  const auto actual {HashTable::linearProbeHasher("abc")};
+TEST(HashTableTest, HashingFunctionFindsNothingWithRandomKeyInEmptyTable) {
+  HashTable emptyHashTable{};
 
-  constexpr auto expected{0};
-  EXPECT_EQ(expected, actual);
+  const auto randomkey{"Charles"};
+  const auto actual {emptyHashTable.linear_probe_hasher(randomkey)};
+
+  EXPECT_TRUE(actual.has_value());
 }
 
+TEST(HashTableTest, EmptyHashTableHasNothingForRandomKey) {
+  HashTable emptyHashTable{};
+
+  const auto randomkey{"Dickens"};
+  const auto actual{emptyHashTable.get(randomkey)};
+
+  EXPECT_FALSE(actual.has_value());
+}
+
+TEST(HashTableTest, RandomPairInsertedIntoEmptyHashTableWorks) {
+  HashTable hashTable{};
+
+  const KeyValue pair{"The", 300};
+  const auto success{hashTable.insert(pair.first, pair.second)};
+
+  EXPECT_TRUE(success);
+}
+
+TEST(HashTableTest, PairInsertedTwiceIntoEmptyHashTableWorks) {
+  HashTable hashTable{};
+
+  const KeyValue pair{"The", 300};
+  hashTable.insert(pair.first, pair.second);
+  const auto success{hashTable.insert(pair.first, pair.second)};
+
+  EXPECT_TRUE(success);
+}
+
+TEST(HashTableTest, PairInsertedAfterTableFullFails) {
+  HashTable hashTable{};
+
+  const KeyValue pair{"abc", 2};
+  for(auto i{0}; i < HashTable::TABLE_SIZE; i++) {
+    hashTable.insert(pair.first, pair.second);
+  }
+  const auto success {hashTable.insert(pair.first, pair.second)};
+
+  EXPECT_FALSE(success);
+}
+
+TEST(HashTableTest, InsertedPairIsFoundWithGet) {
+  HashTable hashTable{};
+  const KeyValue pair{"def", 9};
+  hashTable.insert(pair.first, pair.second);
+
+  const auto success{hashTable.get(pair.first)};
+
+  EXPECT_TRUE(success.has_value());
+}
+
+TEST(HashTableTest, GetReturnsCorrectValueForInsertedPair) {
+  HashTable hashTable{};
+  const KeyValue pair{"def", 9};
+  hashTable.insert(pair.first, pair.second);
+
+  const auto success{hashTable.get(pair.first)};
+
+  EXPECT_EQ(9, success.value());
+}
+
+TEST(HashTableTest, AfterRemoveInsertedPairIsNotFound) {
+  HashTable hashTable{};
+  const KeyValue pair{"123", 4};
+  hashTable.insert(pair.first, pair.second);
+  hashTable.remove(pair.first);
+
+  const auto success{hashTable.get(pair.first)};
+
+  EXPECT_FALSE(success);
+}
+
+/*
 TEST(HashTableTest, GetReturnsZero) {
   HashTable hashTable{};
 
@@ -50,3 +125,4 @@ TEST(HashTableTest, GetFirstReturnsEmpty) {
   constexpr auto expected{""};
   EXPECT_EQ(expected, actual);
 }
+*/

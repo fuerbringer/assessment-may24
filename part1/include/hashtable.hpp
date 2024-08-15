@@ -3,23 +3,32 @@
 #include "hashtableinterface.hpp"
 #include <array>
 #include <functional>
+#include <optional>
 
-using HashFunction = std::function<size_t(const ValueType)>;
-
+/*
+(Comment)
+Hashing function can be passed to hash table to enable any type of hashing method
+*/
+using HashFunction = std::function<std::optional<size_t>(KeyType)>;
 
 class HashTable : public HashTableInterface {
 public:
-    HashTable(HashFunction hashFunction = linearProbeHasher);
+    HashTable();
+    HashTable(HashFunction hashFunction);
 public:
-    void insert(KeyType key, ValueType value);
+    bool insert(KeyType key, ValueType value);
     void remove(KeyType key);
-    ValueType get(KeyType key);
-    ValueType get_last() const;
-    ValueType get_first() const;
+    std::optional<ValueType> get(KeyType key);
+    std::optional<ValueType> get_last() const;
+    std::optional<ValueType> get_first() const;
+    void debug_print_content() const;
 
-    static constexpr size_t TABLE_SIZE{1000};
-    static HashFunction linearProbeHasher;
+    static constexpr size_t TABLE_SIZE{100};
+    static inline const ValueType EMPTY_VALUE{0};
+    std::optional<size_t> linear_probe_hasher(KeyType);
+    using TableType = std::array<std::optional<ValueType>, HashTable::TABLE_SIZE>;
 private:
-    std::array<ValueType, TABLE_SIZE> m_values{};
+    TableType m_values{};
     HashFunction m_hashFunction{};
+    std::optional<size_t> m_mostRecentlyMutated{};
 };

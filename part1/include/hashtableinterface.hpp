@@ -1,9 +1,10 @@
 #pragma once
 
 #include <string>
+#include <optional>
 
 using KeyType = std::string;
-using ValueType = std::string;
+using ValueType = int;
 
 /*
 (Comment)
@@ -15,9 +16,9 @@ Avoided templates for key and value type since datatypes were clearly defined.
 
 class HashTableInterface {
 public:
-    virtual void insert(KeyType key, ValueType value) = 0;
+    virtual bool insert(KeyType key, ValueType value) = 0;
     virtual void remove(KeyType key) = 0;
-    virtual ValueType get(KeyType key) = 0;
-    virtual ValueType get_last() const = 0;
-    virtual ValueType get_first() const = 0;
+    virtual std::optional<ValueType> get(KeyType key) = 0;
+    virtual std::optional<ValueType> get_last() const = 0;
+    virtual std::optional<ValueType> get_first() const = 0;
 };
