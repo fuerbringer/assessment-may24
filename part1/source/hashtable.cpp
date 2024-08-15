@@ -73,12 +73,13 @@ std::optional<ValueType> HashTable::get_first() const {
   return std::nullopt;
 }
 
-void HashTable::debug_print_content() const {
+void HashTable::print_contents() const {
   size_t index{0};
   for(const auto& cell : m_values) {
     if(cell.has_value()) {
-      std::cout << index << ": " << cell.value() << std::endl;
+      std::cout << m_keys[index].value() << ": " << cell.value() << std::endl;
     }
+    index++;
   }
 }
 
@@ -108,7 +109,7 @@ std::optional<size_t> HashTable::linear_probe_find_free(const size_t startingInd
   bool found{false};
   for (auto i{0}; i < maxSearchCount; i++)
   {
-    if (is_cell_free_at_index(linearProbingIndex, m_values))
+    if (is_cell_free_or_same_at_index(linearProbingIndex, key, m_values, m_keys))
     {
       index = linearProbingIndex;
       found = true;

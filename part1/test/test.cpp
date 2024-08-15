@@ -132,11 +132,12 @@ TEST(HashTableTest, DifferentKeyValuePairsInsertedOneRemovedFirstCantBeFoundAgai
 
 TEST(HashTableTest, MultiplePairsInsertedGetLastReturnsCorrectValue) {
   HashTable hashTable{};
-  const KeyValue pair{"123", 4};
-  const KeyValue pair2{"456", 8};
+  const KeyValue pair{"to", 0};
+  const KeyValue pair2{"to", 1};
   const KeyValue pair3{"a", 999};
   hashTable.insert(pair.first, pair.second);
   hashTable.insert(pair2.first, pair2.second);
+  hashTable.insert(pair2.first, pair2.second + 1);
   hashTable.insert(pair3.first, pair3.second);
 
   const auto result{hashTable.get_last().value()};

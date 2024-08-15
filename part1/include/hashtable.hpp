@@ -22,9 +22,9 @@ public:
     std::optional<ValueType> get(KeyType key);
     std::optional<ValueType> get_last() const;
     std::optional<ValueType> get_first() const;
-    void debug_print_content() const;
+    void print_contents() const;
 
-    static constexpr size_t TABLE_SIZE{100};
+    static constexpr size_t TABLE_SIZE{500};
     static inline const KeyType EMPTY_KEY{""};
     static inline const ValueType EMPTY_VALUE{0};
     size_t default_hash_function(KeyType);
