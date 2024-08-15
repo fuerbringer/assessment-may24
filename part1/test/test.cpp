@@ -11,9 +11,9 @@ TEST(HashTableTest, HashingFunctionFindsNothingWithRandomKeyInEmptyTable) {
   HashTable emptyHashTable{};
 
   const auto randomkey{"Charles"};
-  const auto actual {emptyHashTable.linear_probe_hasher(randomkey)};
+  const auto actual {emptyHashTable.default_hash_function(randomkey)};
 
-  EXPECT_TRUE(actual.has_value());
+  EXPECT_EQ(7, actual);
 }
 
 TEST(HashTableTest, EmptyHashTableHasNothingForRandomKey) {
@@ -76,13 +76,28 @@ TEST(HashTableTest, GetReturnsCorrectValueForInsertedPair) {
   EXPECT_EQ(9, success.value());
 }
 
-TEST(HashTableTest, AfterRemoveInsertedPairIsNotFound) {
+TEST(HashTableTest, DifferentKeyValuePairsInsertedOneRemovedCantBeFoundAgain) {
   HashTable hashTable{};
   const KeyValue pair{"123", 4};
+  const KeyValue pair2{"456", 8};
   hashTable.insert(pair.first, pair.second);
+  hashTable.insert(pair2.first, pair2.second);
   hashTable.remove(pair.first);
 
   const auto success{hashTable.get(pair.first)};
+
+  EXPECT_FALSE(success);
+}
+
+TEST(HashTableTest, DifferentKeyValuePairsInsertedOneRemovedFirstCantBeFoundAgain) {
+  HashTable hashTable{};
+  const KeyValue pair{"123", 4};
+  const KeyValue pair2{"456", 8};
+  hashTable.insert(pair.first, pair.second);
+  hashTable.insert(pair2.first, pair2.second);
+  hashTable.remove(pair2.first);
+
+  const auto success{hashTable.get(pair2.first)};
 
   EXPECT_FALSE(success);
 }

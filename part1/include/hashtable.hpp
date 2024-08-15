@@ -9,7 +9,7 @@
 (Comment)
 Hashing function can be passed to hash table to enable any type of hashing method
 */
-using HashFunction = std::function<std::optional<size_t>(KeyType)>;
+using HashFunction = std::function<size_t(KeyType)>;
 
 class HashTable : public HashTableInterface {
 public:
@@ -24,11 +24,16 @@ public:
     void debug_print_content() const;
 
     static constexpr size_t TABLE_SIZE{100};
+    static inline const KeyType EMPTY_KEY{""};
     static inline const ValueType EMPTY_VALUE{0};
-    std::optional<size_t> linear_probe_hasher(KeyType);
-    using TableType = std::array<std::optional<ValueType>, HashTable::TABLE_SIZE>;
+    size_t default_hash_function(KeyType);
+    using KeyTableType = std::array<std::optional<KeyType>, HashTable::TABLE_SIZE>;
+    using ValueTableType = std::array<std::optional<ValueType>, HashTable::TABLE_SIZE>;
 private:
-    TableType m_values{};
+    KeyTableType m_keys{};
+    ValueTableType m_values{};
     HashFunction m_hashFunction{};
     std::optional<size_t> m_mostRecentlyMutated{};
+    std::optional<size_t> linear_probe_find_free(size_t index);
+    std::optional<size_t> linear_probe_find_used(size_t index, KeyType key);
 };
