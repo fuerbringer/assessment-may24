@@ -150,6 +150,9 @@ std::optional<size_t> HashTable::linear_probe_find_used(const size_t startingInd
       {
         index = linearProbingIndex;
         found = true;
+      } else
+      {
+        linearProbingIndex = (linearProbingIndex + 1) % TABLE_SIZE;
       }
     }
     else

@@ -76,6 +76,22 @@ TEST(HashTableTest, GetReturnsCorrectValueForInsertedPair) {
   EXPECT_EQ(9, success.value());
 }
 
+TEST(HashTableTest, GetReturnsCorrectValueForInsertedPairWithOtherSameKeyInsertedAfter) {
+  HashTable hashTable{};
+  const KeyValue pair{"def", 9};
+  const KeyValue pair2{"gop", 12};
+  hashTable.insert(pair.first, pair.second);
+  hashTable.insert(pair2.first, pair2.second);
+
+  const auto result{hashTable.get(pair.first)};
+
+  if(result.has_value()) {
+    EXPECT_EQ(9, result.value());
+  } else {
+    FAIL();
+  }
+}
+
 TEST(HashTableTest, DifferentKeyValuePairsInsertedOneRemovedCantBeFoundAgain) {
   HashTable hashTable{};
   const KeyValue pair{"123", 4};
@@ -100,6 +116,20 @@ TEST(HashTableTest, DifferentKeyValuePairsInsertedOneRemovedFirstCantBeFoundAgai
   const auto success{hashTable.get(pair2.first)};
 
   EXPECT_FALSE(success);
+}
+
+TEST(HashTableTest, MultiplePairsInsertedGetLastReturnsCorrectValue) {
+  HashTable hashTable{};
+  const KeyValue pair{"123", 4};
+  const KeyValue pair2{"456", 8};
+  const KeyValue pair3{"a", 999};
+  hashTable.insert(pair.first, pair.second);
+  hashTable.insert(pair2.first, pair2.second);
+  hashTable.insert(pair3.first, pair3.second);
+
+  const auto result{hashTable.get_last().value()};
+
+  EXPECT_EQ(999, result);
 }
 
 /*
