@@ -44,16 +44,28 @@ TEST(HashTableTest, PairInsertedTwiceIntoEmptyHashTableWorks) {
   EXPECT_TRUE(success);
 }
 
-TEST(HashTableTest, PairInsertedAfterTableFullFails) {
+TEST(HashTableTest, DifferentPairsInsertedAfterTableFullFails) {
   HashTable hashTable{};
 
-  const KeyValue pair{"abc", 2};
+  KeyValue pair{"X", 2};
+  for(auto i{0}; i < HashTable::TABLE_SIZE; i++) {
+    hashTable.insert(std::to_string(i), 123);
+  }
+  const auto success {hashTable.insert(pair.first, pair.second)};
+
+  EXPECT_FALSE(success);
+}
+
+TEST(HashTableTest, SamePairInsertedAfterTableFullWorks) {
+  HashTable hashTable{};
+
+  KeyValue pair{"X", 2};
   for(auto i{0}; i < HashTable::TABLE_SIZE; i++) {
     hashTable.insert(pair.first, pair.second);
   }
   const auto success {hashTable.insert(pair.first, pair.second)};
 
-  EXPECT_FALSE(success);
+  EXPECT_TRUE(success);
 }
 
 TEST(HashTableTest, InsertedPairIsFoundWithGet) {
@@ -132,34 +144,18 @@ TEST(HashTableTest, MultiplePairsInsertedGetLastReturnsCorrectValue) {
   EXPECT_EQ(999, result);
 }
 
-/*
-TEST(HashTableTest, GetReturnsZero) {
+TEST(HashTableTest, SameWordFoundIncreaseOccurrenceValue) {
   HashTable hashTable{};
+  const KeyValue pair{"the", 1};
+  hashTable.insert(pair.first, pair.second);
+  const auto occurrences {hashTable.get(pair.first).value()};
+  const auto newOccurrences{occurrences + 1};
 
-  const auto key{"123"};
-  const auto actual{hashTable.get(key)};
+  hashTable.insert(pair.first, newOccurrences);
 
-  constexpr auto expected{""};
-  EXPECT_EQ(expected, actual);
-}
+  const auto result{hashTable.get(pair.first).value()};
 
-TEST(HashTableTest, GetReturnsEmpty) {
-  HashTable hashTable{};
-
-  const auto key{"123"};
-  const auto actual{hashTable.get(key)};
-
-  constexpr auto expected{""};
-  EXPECT_EQ(expected, actual);
-}
-
-TEST(HashTableTest, GetLastReturnsEmpty) {
-  HashTable hashTable{};
-
-  const auto actual{hashTable.get_last()};
-
-  constexpr auto expected{""};
-  EXPECT_EQ(expected, actual);
+  EXPECT_EQ(2, result);
 }
 
 TEST(HashTableTest, GetFirstReturnsEmpty) {
@@ -167,7 +163,5 @@ TEST(HashTableTest, GetFirstReturnsEmpty) {
 
   const auto actual{hashTable.get_first()};
 
-  constexpr auto expected{""};
-  EXPECT_EQ(expected, actual);
+  EXPECT_FALSE(actual.has_value());
 }
-*/

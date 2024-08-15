@@ -3,8 +3,11 @@
 
 namespace
 {
-bool is_cell_fee_at_index(const size_t index, const HashTable::ValueTableType& table) {
+bool is_cell_free_at_index(const size_t index, const HashTable::ValueTableType& table) {
   return !table[index].has_value();
+}
+bool is_cell_free_or_same_at_index(const size_t index, const KeyType key, const HashTable::ValueTableType& values, const HashTable::KeyTableType& keys) {
+  return is_cell_free_at_index(index, values) || (keys[index] == key);
 }
 }
 
@@ -21,7 +24,7 @@ HashTable::HashTable(HashFunction hashFunction)
 bool HashTable::insert(const KeyType key, const ValueType value)
 {
   const auto index{m_hashFunction(key)};
-  const auto indexWithoutCollision{linear_probe_find_free(index)};
+  const auto indexWithoutCollision{linear_probe_find_free(index, key)};
   if(!indexWithoutCollision.has_value()) {
     return false;
   }
@@ -84,10 +87,10 @@ size_t HashTable::default_hash_function(KeyType key)
   return key.length() % TABLE_SIZE;
 }
 
-std::optional<size_t> HashTable::linear_probe_find_free(const size_t startingIndex)
+std::optional<size_t> HashTable::linear_probe_find_free(const size_t startingIndex, const KeyType key)
 {
   size_t index{startingIndex};
-  if (is_cell_fee_at_index(index, m_values))
+  if (is_cell_free_or_same_at_index(index, key, m_values, m_keys))
   {
     /*
     (Comment)
@@ -105,7 +108,7 @@ std::optional<size_t> HashTable::linear_probe_find_free(const size_t startingInd
   bool found{false};
   for (auto i{0}; i < maxSearchCount; i++)
   {
-    if (is_cell_fee_at_index(linearProbingIndex, m_values))
+    if (is_cell_free_at_index(linearProbingIndex, m_values))
     {
       index = linearProbingIndex;
       found = true;
@@ -123,10 +126,14 @@ std::optional<size_t> HashTable::linear_probe_find_free(const size_t startingInd
   return std::nullopt;
 }
 
+/*
+(Comment)
+find_used has code duplication with find_free, could be refactored
+*/
 std::optional<size_t> HashTable::linear_probe_find_used(const size_t startingIndex, const KeyType key)
 {
   size_t index{startingIndex};
-  if (is_cell_fee_at_index(index, m_values))
+  if (is_cell_free_at_index(index, m_values))
   {
     /*
     (Comment)

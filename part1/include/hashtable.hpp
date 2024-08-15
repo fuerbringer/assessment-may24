@@ -8,6 +8,7 @@
 /*
 (Comment)
 Hashing function can be passed to hash table to enable any type of hashing method
+Saving keeps track of keys so it can find cell values that were placed when linear probing tried to fix their colliding keys.
 */
 using HashFunction = std::function<size_t(KeyType)>;
 
@@ -34,6 +35,6 @@ private:
     ValueTableType m_values{};
     HashFunction m_hashFunction{};
     std::optional<size_t> m_mostRecentlyMutated{};
-    std::optional<size_t> linear_probe_find_free(size_t index);
+    std::optional<size_t> linear_probe_find_free(size_t index, const KeyType key);
     std::optional<size_t> linear_probe_find_used(size_t index, KeyType key);
 };
