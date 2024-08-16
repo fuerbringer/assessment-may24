@@ -6,6 +6,10 @@
 
 namespace
 {
+  /*
+  (Comment)
+  Could be expanded if more parameters desired
+  */
   std::string build_full_url(const std::string &baseUrl, const std::vector<std::string> &parameters)
   {
     std::string fullUrl{baseUrl};
@@ -36,6 +40,10 @@ parameters could use pair instead of string
 */
 std::string Endpoint::get(const std::vector<std::string> &parameters)
 {
+  /*
+  (Comment)
+  Simplest possible way to make a GET request and return as string.
+  */
   const std::string fullUrl{build_full_url(m_baseUrl, parameters)};
 
   curlpp::Cleanup myCleanup;

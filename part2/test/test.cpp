@@ -17,6 +17,12 @@ bool operator==(const Trade left, const Trade right)
          left.buyerWasMaker == right.buyerWasMaker;
 }
 
+/*
+(Comment)
+Class AggregateTradeParser was implemented test driven and incrementally with each test. 
+Test bodies conform to AAA pattern.
+*/
+
 TEST(AggregateTradeParserTest, EmptyRawStringReturnsEmptyListOfTrades)
 {
   AggregateTradeParser parser{};
@@ -195,29 +201,3 @@ TEST(AggregateTradeParserTest, RawStringContainingTwoTradesReturnsTwoCorrectCont
   expectedTradeTwo.buyerWasMaker = true;
   EXPECT_EQ(expectedTradeOne, actualTradeOne);
 }
-
-/*
-TEST(AggregateTradeParserTest, RawStringContainingOneTradeReturnsOneTrade) {
-  AggregateTradeParser parser{};
-
-  const auto result{parser.string_to_trades(VALID_SINGLE_TRADE)};
-
-  EXPECT_EQ(1, result.size());
-}
-
-TEST(AggregateTradeParserTest, RawStringContainingOneTradeReturnsCorrectTradeObject) {
-  AggregateTradeParser parser{};
-
-  const auto result{parser.string_to_trades(VALID_SINGLE_TRADE)};
-
-  const auto actualTrade{result[0]};
-  Trade expectedTrade{};
-  expectedTrade.aggregateTradeId = 173264206;
-  expectedTrade.price = 57475.10;
-  expectedTrade.quantity = 0.017;
-  expectedTrade.firstTradeId = 288456246;
-  expectedTrade.lastTradeId = 288456246;
-  expectedTrade.timestamp = 1723827137604;
-  expectedTrade.buyerWasMaker = false;
-  EXPECT_EQ(expectedTrade, actualTrade);
-}*/

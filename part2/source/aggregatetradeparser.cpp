@@ -2,6 +2,14 @@
 #include <algorithm>
 #include <variant>
 
+/*
+(Comment)
+Parser for the supplied format. Iterates over raw one-line string,
+makes distinctions based on tokens and fast forwards over values after saving them.
+For a JSON format, I'd consider using a fast implementation like rapidjson, but 
+it depends on the needs and scope of the project.
+*/
+
 namespace
 {
     enum class Token : const char
@@ -46,6 +54,11 @@ namespace
     }
     void parse_value(State &state, std::string::const_iterator &iterator, std::string::const_iterator &end, Object &object, Trade &trade)
     {
+        /*
+        (Comment)
+        Parsing of the various data types that appear in a value field.
+        Could certainly be cleaned up further. Very state heavy.
+        */
         switch (state)
         {
         case State::VALUE_AWAITING:
@@ -53,21 +66,21 @@ namespace
             if (*iterator == static_cast<const char>(Token::QUOTATION))
             {
                 iterator += 1;
-                // float, find where closing quote is
+                // float value
                 const auto endOfDouble{std::find(iterator, end, static_cast<const char>(Token::QUOTATION))};
                 std::string value{iterator, endOfDouble};
                 object.value = std::stod(value.c_str());
                 auto newEnd{iterator + value.length()};
                 if (newEnd < end)
                 {
-                    iterator = newEnd;
+                    iterator = newEnd; // forward
                 }
             }
             else
             {
                 switch (*iterator)
                 {
-                // floats
+                // booleans
                 case 't':
                     object.value = true;
                     break;
@@ -83,7 +96,7 @@ namespace
                     auto newEnd{iterator + value.length()};
                     if (newEnd < end)
                     {
-                        iterator = newEnd;
+                        iterator = newEnd; // forward
                     }
                     break;
                 }
@@ -127,6 +140,7 @@ namespace
 (Comment)
 The algorithmic complexity of this algorithm is O(n).
 It "simply" iterates over the chars in the raw string from the endpoint without nested looping.
+The state machine keeps track of what we're parsing.
 */
 std::vector<Trade> AggregateTradeParser::string_to_trades(const std::string &rawEndpointString)
 {
@@ -137,7 +151,7 @@ std::vector<Trade> AggregateTradeParser::string_to_trades(const std::string &raw
     auto end{rawEndpointString.end()};
     for (auto iterator{rawEndpointString.begin()}; iterator < end; iterator++)
     {
-        Token token{static_cast<const char>(*iterator)};
+        const Token token{static_cast<const char>(*iterator)};
         switch (token)
         {
         case Token::LIST_OPEN:
