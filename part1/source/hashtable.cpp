@@ -89,6 +89,7 @@ size_t HashTable::default_hash_function(KeyType key)
   /*
   (Comment)
   polinomial rolling hash
+  potential for optimization here
   */
   constexpr auto p{31};
   const int m = std::pow(10, 9) + 9;
@@ -99,10 +100,7 @@ size_t HashTable::default_hash_function(KeyType key)
   }
   const auto index = sum % m;
   const auto indexWithinTable{index % TABLE_SIZE};
-  //if(n == 5)
-  //std::cout << key << " at " << indexWithinTable << std::endl;
   return indexWithinTable;
-  //return key.length() % TABLE_SIZE;
 }
 
 std::optional<size_t> HashTable::linear_probe_find_free(const size_t startingIndex, const KeyType key)
