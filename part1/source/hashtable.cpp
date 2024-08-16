@@ -69,7 +69,9 @@ std::optional<ValueType> HashTable::get_last() const
 std::optional<ValueType> HashTable::get_first() const {
   /*
   (Comment)
-  TODO keep track of LRU
+  Unimplemented, I don't have the time. But it would work as follows:
+  Create a queue (FIFO) of indices, delete remove()ed ones. 
+  First out the queue is what this function should return.
   */
   return std::nullopt;
 }
@@ -140,7 +142,7 @@ std::optional<size_t> HashTable::linear_probe_find_free(const size_t startingInd
     return index;
   }
 
-  // (Comment) if we get here, then table full. No integer meaningful:
+  /* (Comment) if we get here, then table full. No integer meaningful: */
   return std::nullopt;
 }
 
