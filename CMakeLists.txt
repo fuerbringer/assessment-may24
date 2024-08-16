@@ -6,4 +6,4 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(part1)
-#add_subdirectory(part2)
+add_subdirectory(part2)

@@ -22,6 +22,11 @@ std::string remove_punctuation(const std::string word)
   return result;
 }
 
+/*
+(Comment)
+Could do further filtering for multichars like “ or ’ (remove_punctuation not enough for that)
+*/
+
 std::string to_lower_case(std::string word)
 {
   std::transform(word.begin(), word.end(), word.begin(),
