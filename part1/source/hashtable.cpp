@@ -1,5 +1,6 @@
 #include "hashtable.hpp"
 #include <iostream>
+#include <cmath>
 
 namespace
 {
@@ -85,7 +86,23 @@ void HashTable::print_contents() const {
 
 size_t HashTable::default_hash_function(KeyType key)
 {
-  return key.length() % TABLE_SIZE;
+  /*
+  (Comment)
+  polinomial rolling hash
+  */
+  constexpr auto p{31};
+  const int m = std::pow(10, 9) + 9;
+  const auto n{key.length()};
+  int sum{0};
+  for(auto i{0}; i < n; i++) {
+    sum += key[i] * static_cast<int>(std::pow(p, i));
+  }
+  const auto index = sum % m;
+  const auto indexWithinTable{index % TABLE_SIZE};
+  //if(n == 5)
+  //std::cout << key << " at " << indexWithinTable << std::endl;
+  return indexWithinTable;
+  //return key.length() % TABLE_SIZE;
 }
 
 std::optional<size_t> HashTable::linear_probe_find_free(const size_t startingIndex, const KeyType key)
@@ -103,6 +120,8 @@ std::optional<size_t> HashTable::linear_probe_find_free(const size_t startingInd
   /*
   (Comment)
   from here, it's linear probing, O(n)
+  If we were to improve performance, it would be here and the hashing function.
+  Less collisions => less need to linearly probe.
   */
   auto linearProbingIndex{(index + 1) % TABLE_SIZE};
   constexpr auto maxSearchCount{TABLE_SIZE};
@@ -134,19 +153,11 @@ find_used has code duplication with find_free, could be refactored
 std::optional<size_t> HashTable::linear_probe_find_used(const size_t startingIndex, const KeyType key)
 {
   size_t index{startingIndex};
-  if (is_cell_free_at_index(index, m_values))
+  if (is_cell_free_or_same_at_index(index, key, m_values, m_keys))
   {
-    /*
-    (Comment)
-    O(1)
-    */
     return index;
   }
 
-  /*
-  (Comment)
-  from here, it's linear probing, O(n)
-  */
   auto linearProbingIndex{(index + 1) % TABLE_SIZE};
   constexpr auto maxSearchCount{TABLE_SIZE};
   bool found{false};
@@ -172,6 +183,5 @@ std::optional<size_t> HashTable::linear_probe_find_used(const size_t startingInd
     return index;
   }
 
-  // (Comment) if we get here, then table full. No integer meaningful:
   return std::nullopt;
 }

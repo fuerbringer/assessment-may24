@@ -13,7 +13,7 @@ TEST(HashTableTest, HashingFunctionFindsNothingWithRandomKeyInEmptyTable) {
   const auto randomkey{"Charles"};
   const auto actual {emptyHashTable.default_hash_function(randomkey)};
 
-  EXPECT_EQ(7, actual);
+  EXPECT_EQ(403, actual);
 }
 
 TEST(HashTableTest, EmptyHashTableHasNothingForRandomKey) {

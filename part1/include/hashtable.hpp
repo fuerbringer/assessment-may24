@@ -9,6 +9,8 @@
 (Comment)
 Hashing function can be passed to hash table to enable any type of hashing method
 Saving keeps track of keys so it can find cell values that were placed when linear probing tried to fix their colliding keys.
+Heavy usage of std::optional as wrapper around both keys and values. Serves as distinction 
+mechanism to see if cells are used or not (as opposde to zero checking).
 */
 using HashFunction = std::function<size_t(KeyType)>;
 
@@ -24,7 +26,7 @@ public:
     std::optional<ValueType> get_first() const;
     void print_contents() const;
 
-    static constexpr size_t TABLE_SIZE{500};
+    static constexpr size_t TABLE_SIZE{1000};
     static inline const KeyType EMPTY_KEY{""};
     static inline const ValueType EMPTY_VALUE{0};
     size_t default_hash_function(KeyType);
