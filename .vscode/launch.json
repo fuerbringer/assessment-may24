@@ -20,6 +20,21 @@
             "cwd": "${workspaceFolder}"
         },
         {
+            "name": "test part2",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/part2/testpart2",
+            "args": [
+            ],
+            "environment": [
+                {
+                    "name": "config",
+                    "value": "Debug"
+                }
+            ],
+            "cwd": "${workspaceFolder}"
+        },
+        {
             "name": "app part1",
             "type": "cppdbg",
             "request": "launch",

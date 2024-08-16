@@ -9,12 +9,12 @@ struct Trade {
     double quantity{};
     int firstTradeId{};
     int lastTradeId{};
-    int timestamp{};
+    long int timestamp{};
     bool buyerWasMaker{};
 };
 
 class AggregateTradeParser
 {
 public:
-    std::vector<Trade> StringToTrades(const std::string& rawEndpointString);
+    std::vector<Trade> string_to_trades(const std::string& rawEndpointString);
 };
