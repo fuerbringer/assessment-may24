@@ -93,6 +93,9 @@ namespace
         case 'p':
             trade.price = std::get<1>(object.value);
             break;
+        case 'q':
+            trade.quantity = std::get<1>(object.value);
+            break;
         }
     }
 }
