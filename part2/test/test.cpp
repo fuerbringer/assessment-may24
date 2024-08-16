@@ -120,6 +120,82 @@ TEST(AggregateTradeParserTest, RawStringContainingSixKeyValueTradeReturnsCorrect
   EXPECT_EQ(expectedTrade, actualTrade);
 }
 
+TEST(AggregateTradeParserTest, RawStringContainingBooleanKeyValueTradeReturnsCorrectTradeObject)
+{
+  AggregateTradeParser parser{};
+
+  const std::string rawString{"[{\"a\":173264676,\"p\":\"0.01633102\",\"q\":\"4.70443515\",\"f\":27781,\"l\":22782,\"T\":1498793709153,\"m\":true}]"};
+  const auto result{parser.string_to_trades(rawString)};
+
+  const auto actualTrade{result[0]};
+  Trade expectedTrade{};
+  expectedTrade.aggregateTradeId = 173264676;
+  expectedTrade.price = 0.01633102;
+  expectedTrade.quantity = 4.70443515;
+  expectedTrade.firstTradeId = 27781;
+  expectedTrade.lastTradeId = 22782;
+  expectedTrade.timestamp = 1498793709153;
+  expectedTrade.buyerWasMaker = true;
+  EXPECT_EQ(expectedTrade, actualTrade);
+}
+
+TEST(AggregateTradeParserTest, RawStringContainingCommaAfterLastKeyValueTradeReturnsCorrectTradeObject)
+{
+  AggregateTradeParser parser{};
+
+  const std::string rawString{"[{\"a\":173264676,\"p\":\"0.01633102\",\"q\":\"4.70443515\",\"f\":27781,\"l\":22782,\"T\":1498793709153,\"m\":true,}]"};
+  const auto result{parser.string_to_trades(rawString)};
+
+  const auto actualTrade{result[0]};
+  Trade expectedTrade{};
+  expectedTrade.aggregateTradeId = 173264676;
+  expectedTrade.price = 0.01633102;
+  expectedTrade.quantity = 4.70443515;
+  expectedTrade.firstTradeId = 27781;
+  expectedTrade.lastTradeId = 22782;
+  expectedTrade.timestamp = 1498793709153;
+  expectedTrade.buyerWasMaker = true;
+  EXPECT_EQ(expectedTrade, actualTrade);
+}
+
+TEST(AggregateTradeParserTest, RawStringContainingTwoTradesReturnsTwoTrades)
+{
+  AggregateTradeParser parser{};
+
+  const std::string rawString{"[{\"a\":173264676,\"p\":\"0.01633102\",\"q\":\"4.70443515\",\"f\":27781,\"l\":22782,\"T\":1498793709153,\"m\":true},{\"a\":173264676,\"p\":\"0.01633102\",\"q\":\"4.70443515\",\"f\":27781,\"l\":22782,\"T\":1498793709153,\"m\":true}]"};
+  const auto result{parser.string_to_trades(rawString)};
+
+  EXPECT_EQ(2, result.size());
+}
+
+TEST(AggregateTradeParserTest, RawStringContainingTwoTradesReturnsTwoCorrectContents)
+{
+  AggregateTradeParser parser{};
+
+  const std::string rawString{"[{\"a\":173264676,\"p\":\"0.01633102\",\"q\":\"4.70443515\",\"f\":27781,\"l\":22782,\"T\":1498793709153,\"m\":true},{\"a\":123,\"p\":\"0.01633102\",\"q\":\"4.70443515\",\"f\":456,\"l\":78910,\"T\":1498000000001,\"m\":true}]"};
+  const auto result{parser.string_to_trades(rawString)};
+
+  const auto actualTradeOne{result[0]};
+  const auto actualTradeTwo{result[1]};
+  Trade expectedTradeOne{};
+  expectedTradeOne.aggregateTradeId = 173264676;
+  expectedTradeOne.price = 0.01633102;
+  expectedTradeOne.quantity = 4.70443515;
+  expectedTradeOne.firstTradeId = 27781;
+  expectedTradeOne.lastTradeId = 22782;
+  expectedTradeOne.timestamp = 1498793709153;
+  expectedTradeOne.buyerWasMaker = true;
+  Trade expectedTradeTwo{};
+  expectedTradeTwo.aggregateTradeId = 123;
+  expectedTradeTwo.price = 0.01633102;
+  expectedTradeTwo.quantity = 4.70443515;
+  expectedTradeTwo.firstTradeId = 456;
+  expectedTradeTwo.lastTradeId = 78910;
+  expectedTradeTwo.timestamp = 1498000000001;
+  expectedTradeTwo.buyerWasMaker = true;
+  EXPECT_EQ(expectedTradeOne, actualTradeOne);
+}
+
 /*
 TEST(AggregateTradeParserTest, RawStringContainingOneTradeReturnsOneTrade) {
   AggregateTradeParser parser{};

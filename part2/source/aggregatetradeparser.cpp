@@ -65,18 +65,29 @@ namespace
             }
             else
             {
-                // integer, find where comma is
-                const auto endOfInteger{std::find(iterator, end, static_cast<const char>(Token::SEPARATOR))};
-                std::string value{iterator, endOfInteger};
-                object.value = std::stol(value.c_str());
-                auto newEnd{iterator + value.length()};
-                if (newEnd < end)
+                switch (*iterator)
                 {
-                    iterator = newEnd;
+                // floats
+                case 't':
+                    object.value = true;
+                    break;
+                case 'f':
+                    object.value = false;
+                    break;
+
+                default:
+                    // integer, find where comma is
+                    const auto endOfInteger{std::find(iterator, end, static_cast<const char>(Token::SEPARATOR))};
+                    std::string value{iterator, endOfInteger};
+                    object.value = std::stol(value.c_str());
+                    auto newEnd{iterator + value.length()};
+                    if (newEnd < end)
+                    {
+                        iterator = newEnd;
+                    }
+                    break;
                 }
-                // TODO handle true/false
             }
-            //iterator += 1;
             state = State::KEY_AWAITING;
             break;
         default:
@@ -112,6 +123,11 @@ namespace
     }
 }
 
+/*
+(Comment)
+The algorithmic complexity of this algorithm is O(n).
+It "simply" iterates over the chars in the raw string from the endpoint without nested looping.
+*/
 std::vector<Trade> AggregateTradeParser::string_to_trades(const std::string &rawEndpointString)
 {
     std::vector<Trade> trades{};
