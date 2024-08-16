@@ -68,7 +68,7 @@ namespace
                 // integer, find where comma is
                 const auto endOfInteger{std::find(iterator, end, static_cast<const char>(Token::SEPARATOR))};
                 std::string value{iterator, endOfInteger};
-                object.value = std::stoi(value.c_str());
+                object.value = std::stol(value.c_str());
                 auto newEnd{iterator + value.length()};
                 if (newEnd < end)
                 {
@@ -95,6 +95,18 @@ namespace
             break;
         case 'q':
             trade.quantity = std::get<1>(object.value);
+            break;
+        case 'f':
+            trade.firstTradeId = std::get<0>(object.value);
+            break;
+        case 'l':
+            trade.lastTradeId = std::get<0>(object.value);
+            break;
+        case 'T':
+            trade.timestamp = std::get<0>(object.value);
+            break;
+        case 'm':
+            trade.buyerWasMaker = std::get<2>(object.value);
             break;
         }
     }
