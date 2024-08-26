@@ -7,7 +7,7 @@ namespace
 bool is_cell_free_at_index(const size_t index, const HashTable::ValueTableType& table) {
   return !table[index].has_value();
 }
-bool is_cell_free_or_same_at_index(const size_t index, const KeyType key, const HashTable::ValueTableType& values, const HashTable::KeyTableType& keys) {
+bool is_cell_free_or_same_at_index(const size_t index, const KeyType& key, const HashTable::ValueTableType& values, const HashTable::KeyTableType& keys) {
   return is_cell_free_at_index(index, values) || (keys[index] == key);
 }
 }
@@ -22,7 +22,7 @@ HashTable::HashTable(HashFunction hashFunction)
   m_hashFunction = hashFunction;
 }
 
-bool HashTable::insert(const KeyType key, const ValueType value)
+bool HashTable::insert(const KeyType& key, const ValueType value)
 {
   const auto index{m_hashFunction(key)};
   const auto indexWithoutCollision{linear_probe_find_free(index, key)};
@@ -36,7 +36,7 @@ bool HashTable::insert(const KeyType key, const ValueType value)
   return true;
 }
 
-void HashTable::remove(const KeyType key)
+void HashTable::remove(const KeyType& key)
 {
   const auto index{m_hashFunction(key)};
   const auto indexWithoutCollision{linear_probe_find_used(index, key)};
@@ -48,7 +48,7 @@ void HashTable::remove(const KeyType key)
   }
 }
 
-std::optional<ValueType> HashTable::get(const KeyType key)
+std::optional<ValueType> HashTable::get(const KeyType& key)
 {
   const auto index{m_hashFunction(key)};
   const auto indexWithoutCollision{linear_probe_find_used(index, key)};
@@ -86,7 +86,7 @@ void HashTable::print_contents() const {
   }
 }
 
-size_t HashTable::default_hash_function(KeyType key)
+size_t HashTable::default_hash_function(const KeyType& key)
 {
   /*
   (Comment)
@@ -105,7 +105,7 @@ size_t HashTable::default_hash_function(KeyType key)
   return indexWithinTable;
 }
 
-std::optional<size_t> HashTable::linear_probe_find_free(const size_t startingIndex, const KeyType key)
+std::optional<size_t> HashTable::linear_probe_find_free(const size_t startingIndex, const KeyType& key)
 {
   size_t index{startingIndex};
   if (is_cell_free_or_same_at_index(index, key, m_values, m_keys))
@@ -150,7 +150,7 @@ std::optional<size_t> HashTable::linear_probe_find_free(const size_t startingInd
 (Comment)
 find_used has code duplication with find_free, could be refactored
 */
-std::optional<size_t> HashTable::linear_probe_find_used(const size_t startingIndex, const KeyType key)
+std::optional<size_t> HashTable::linear_probe_find_used(const size_t startingIndex, const KeyType& key)
 {
   size_t index{startingIndex};
   if (is_cell_free_or_same_at_index(index, key, m_values, m_keys))

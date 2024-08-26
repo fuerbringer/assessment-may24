@@ -13,18 +13,7 @@ struct Trade {
     long int timestamp{};
     bool buyerWasMaker{};
 
-    std::string to_string() const {
-        std::stringstream sstream; 
-        sstream <<
-        "Aggregate Trade ID: " << aggregateTradeId << std::endl << 
-        "Price: " << price << std::endl <<
-        "Quantity: " << quantity << std::endl <<
-        "First trade ID: " << firstTradeId << std::endl <<
-        "Last trade ID: " << lastTradeId << std::endl <<
-        "Timestamp: " << timestamp << std::endl <<
-        "Buyer was maker: " << buyerWasMaker << std::endl;
-        return sstream.str();
-    }
+    std::string to_string() const;
 };
 
 class AggregateTradeParser

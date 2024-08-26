@@ -16,9 +16,9 @@ Avoided templates for key and value type since datatypes were clearly defined.
 
 class HashTableInterface {
 public:
-    virtual bool insert(KeyType key, ValueType value) = 0;
-    virtual void remove(KeyType key) = 0;
-    virtual std::optional<ValueType> get(KeyType key) = 0;
+    virtual bool insert(const KeyType& key, ValueType value) = 0;
+    virtual void remove(const KeyType& key) = 0;
+    virtual std::optional<ValueType> get(const KeyType& key) = 0;
     virtual std::optional<ValueType> get_last() const = 0;
     virtual std::optional<ValueType> get_first() const = 0;
 };

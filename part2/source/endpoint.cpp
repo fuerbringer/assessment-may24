@@ -46,8 +46,6 @@ std::string Endpoint::get(const std::vector<std::string> &parameters)
   */
   const std::string fullUrl{build_full_url(m_baseUrl, parameters)};
 
-  curlpp::Cleanup myCleanup;
-
   std::ostringstream os;
   os << curlpp::options::Url(fullUrl);
 

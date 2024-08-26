@@ -136,6 +136,19 @@ namespace
     }
 }
 
+std::string Trade::to_string() const
+{
+    std::stringstream sstream;
+    sstream << "Aggregate Trade ID: " << aggregateTradeId << std::endl
+            << "Price: " << price << std::endl
+            << "Quantity: " << quantity << std::endl
+            << "First trade ID: " << firstTradeId << std::endl
+            << "Last trade ID: " << lastTradeId << std::endl
+            << "Timestamp: " << timestamp << std::endl
+            << "Buyer was maker: " << buyerWasMaker << std::endl;
+    return sstream.str();
+}
+
 /*
 (Comment)
 The algorithmic complexity of this algorithm is O(n).

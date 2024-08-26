@@ -1,0 +1,40 @@
+# Possible improvements
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+target_include_directories()
+
+# part1 
+main:
+	include algorithm
+	ptr_fun is deprecated c++11
+	
+speed
+release build
+use performance tools perf / valgrind / gperf
+exponential probing -> decrease collisions -> spreads throughotu table
+use buckets: hashmap within hashmap
+2d table probing in y direction
+use alternative data type -> binary tree for words
+verschachtelt hash tables
+
+
+# part2 
+clean up
+reduce shared state
+use recursive descent parser
+use implementations like SIMD JSON: Depending on needs
+profile to squeeze out performance
+
+
+# performance general
+no malloc
+prealloc buffer reuse
+arena allocators (alloc block at once, use parts), like malloc but for a datatype
+ring buffers (with pointers)
+no linked lists -> cache locality!!! use arrays
+std::move and references -> no copies
+no exceptions
+concurrent processes using up cpu time
+fast ram 
+big CPU cache L3 
+

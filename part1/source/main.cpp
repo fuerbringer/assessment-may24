@@ -1,6 +1,7 @@
 #include "hashtable.hpp"
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 
 std::ifstream open_file(const std::string &name)
 {
