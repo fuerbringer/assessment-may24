@@ -27,14 +27,19 @@ profile to squeeze out performance
 
 
 # performance general
-no malloc
-prealloc buffer reuse
-arena allocators (alloc block at once, use parts), like malloc but for a datatype
-ring buffers (with pointers)
-no linked lists -> cache locality!!! use arrays
+Do code profiling, benchmark and iterate
+No unnecessary copying: Use references
+Cache locality, dont use non-contiguous memory
+no linked lists,  use arrays
+no malloc / prealloc buffer reuse
 std::move and references -> no copies
 no exceptions
 concurrent processes using up cpu time
+use compiler like Intel C++ 
 fast ram 
 big CPU cache L3 
+arena allocators (alloc block at once, use parts), like malloc but for a datatype
+ring buffers (with pointers)
+
+
 
